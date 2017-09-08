@@ -16,10 +16,9 @@ app.use(logger("dev"));
 app.use(bodyParser.urlencoded({
   extended: false
 }));
-
 app.use(express.static("public"));
 
-mongoose.connect("mongodb://heroku_jtlp230x:rcjue1dl7f3i8j81fm5vf4rja4@ds127044.mlab.com:27044/heroku_jtlp230x");
+mongoose.connect("mongodb://localhost/webscraper");
 var db = mongoose.connection;
 
 db.on("error", function(error) {
@@ -58,8 +57,9 @@ app.get("/scrape", function(req, res) {
     }
     );
     });
+    res.sendFile(path.join(__dirname + '/public/index.html'));
   });
-  res.sendFile(path.join(__dirname + '/public/index.html'));
+  
 });
 
 // This will get the articles we scraped from the mongoDB
