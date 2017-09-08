@@ -28,7 +28,6 @@ db.on("error", function(error) {
 
 db.once("open", function() {
   console.log("Mongoose connection successful.");
-  db.dropDatabase();
 });
 
 app.get("/scrape", function(req, res) {
