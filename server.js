@@ -7,6 +7,7 @@ var Article = require("./models/Article.js");
 var request = require("request");
 var cheerio = require("cheerio");
 var path = require('path');
+var port = process.env.PORT || 3000;
 
 mongoose.Promise = Promise;
 
@@ -27,7 +28,7 @@ db.on("error", function(error) {
 
 db.once("open", function() {
   console.log("Mongoose connection successful.");
-  //db.dropDatabase();
+  db.dropDatabase();
 });
 
 app.get("/scrape", function(req, res) {
@@ -163,6 +164,6 @@ app.get("/savedArticle", function(req, res){
   res.sendFile(path.join(__dirname + '/public/savedArticles.html'));
 });
 // Listen on port 3000
-app.listen(3000, function() {
+app.listen(port, function() {
   console.log("App running on port 3000!");
 });
