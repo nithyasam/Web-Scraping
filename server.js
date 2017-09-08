@@ -18,7 +18,7 @@ app.use(bodyParser.urlencoded({
 
 app.use(express.static("public"));
 
-mongoose.connect("mongodb://localhost/webscraper" || "mongodb://heroku_jtlp230x:rcjue1dl7f3i8j81fm5vf4rja4@ds127044.mlab.com:27044/heroku_jtlp230x");
+mongoose.connect("mongodb://heroku_jtlp230x:rcjue1dl7f3i8j81fm5vf4rja4@ds127044.mlab.com:27044/heroku_jtlp230x");
 var db = mongoose.connection;
 
 db.on("error", function(error) {
