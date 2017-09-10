@@ -8,6 +8,7 @@ var request = require("request");
 var cheerio = require("cheerio");
 var path = require('path');
 var port = process.env.PORT || 3000;
+var exphbs = require("express-handlebars");
 
 mongoose.Promise = Promise;
 
@@ -17,6 +18,11 @@ app.use(bodyParser.urlencoded({
   extended: false
 }));
 app.use(express.static("public"));
+app.use(bodyParser.json());
+app.use(bodyParser.text());
+
+app.engine("handlebars", exphbs({ defaultLayout: "main" }));
+app.set("view engine", "handlebars");
 
 mongoose.connect("mongodb://heroku_jtlp230x:rcjue1dl7f3i8j81fm5vf4rja4@ds127044.mlab.com:27044/heroku_jtlp230x");
 var db = mongoose.connection;
@@ -27,6 +33,7 @@ db.on("error", function(error) {
 
 db.once("open", function() {
   console.log("Mongoose connection successful.");
+  db.dropDatabase();
 });
 
 app.get("/scrape", function(req, res) {
@@ -57,7 +64,7 @@ app.get("/scrape", function(req, res) {
     }
     );
     });
-    res.sendFile(path.join(__dirname + '/public/index.html'));
+    res.redirect("/articles");
   });
   
 });
@@ -72,7 +79,7 @@ app.get("/articles", function(req, res) {
     }
     // Or send the doc to the browser as a json object
     else {
-      res.json(doc);
+      res.render("index", {article: doc});
     }
   });
 });
@@ -84,9 +91,9 @@ app.get("/saved", function(req, res) {
     if (error) {
       console.log(error);
     }
-    // Or send the doc to the browser as a json object
+    
     else {
-      res.json(doc);
+      res.render("savedArticles", {savedArticle : doc});
     }
   });
 });
@@ -124,7 +131,6 @@ app.post("/articles/:id", function(req, res) {
           console.log(err);
         }
         else {
-          // Or send the document to the browser
           res.send(doc);
         }
       });
@@ -136,7 +142,7 @@ app.post("/remove/:id", function(req, res) {
   console.log("Inside /remove");
   Article.remove({ _id: req.params.id }, function(err) {
     if (!err) {
-      res.redirect("/");
+      res.redirect("/saved");
     }
     else {
       console.log(error);
@@ -154,14 +160,16 @@ app.post("/saveArticle/:id", function(req, res) {
           console.log(err);
         }
         else {
-          // Or send the document to the browser
-          res.send(doc);
+          res.redirect("/articles");
         }
       });
     });
 app.get("/savedArticle", function(req, res){
-  res.sendFile(path.join(__dirname + '/public/savedArticles.html'));
+  res.redirect("/saved");
 });
+app.get("/", function(req,res){
+  res.render("index");
+})
 // Listen on port 3000
 app.listen(port, function() {
   console.log("App running on port 3000!");

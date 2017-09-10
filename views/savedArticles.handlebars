@@ -1,9 +1,4 @@
-<!DOCTYPE html>
-<html lang="en-us">
-<head>
-  <meta charset="UTF-8">
-  <title>Scraping With Mongoose</title>
-  <style>
+<style>
     body { background-color: #F2F6D0 }
     header {
       padding: 30px;
@@ -65,22 +60,25 @@
       font-size: 14px;
       background-color:red;
     }
+    form{
+    	float: left;
+    }
   </style>
-</head>
-<body>
-  <header>
-    <h3><a href="/">Home</a>        |
-      <a href="/scrape" id="scrape">Scrape New York Times</a>       |
-      <a href="/savedArticle">Saved Articles</a>        |
-      <a href="https://github.com/nithyasam/Web-Scraping">GitHub</a>
-    </h3> 
-    <h1 align="center">All the News That's Fit to Scrape</h1>
-  </header>
-  <div id="wrapper">
-    <div id="savedarticles"></div>
-    <div id="notes"></div>
-  </div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="app-saved.js"></script>
-</body>
-</html>
+<div id="wrapper">
+<div id="savedarticles">
+	{{#each savedArticle}}
+		<br>
+		<p>
+		{{this.title}}<br>
+		{{this.link}}
+		</p>
+		<button class='btn' btn-id='{{this._id}}'>Add Note</button>
+		<form action="/remove/{{this._id}}" method="POST">
+		<button class='delbtn' delbtn-id='{{this._id}}'>Delete</button><br>			
+		</form>
+
+	{{/each}}
+</div>
+<div id="notes"></div>
+</div>
+<script src="/app-saved.js" type="text/javascript"></script>
